@@ -1,0 +1,45 @@
+﻿@model TestProject.Models.Paper
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TestProject</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/TestProject.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h2 style="text-align: center;">Paper Divider</h2>
+            <div style="text-align: center;">
+                <button class=" btn-info styled-button" onclick="changePaperSize()">Змінити розмір</button>
+                <button id="removalButton" class="styled-button red" onclick="toggleRemovalMode()">Видалити комірки</button>
+                <button id="saveButton" class="styled-button" onclick="saveCells()">Обчислити</button>
+            </div>
+
+            <div id="paper" class="paper" onmousedown="initialize()"
+                 data-rows="@Model.Rows"
+                 data-columns="@Model.Columns"
+                 style="width: @(Model.Columns * 20)px; height: @(Model.Rows * 20)px; margin: 0 auto;">
+
+                @for (int y = 0; y < Model.Rows; y++)
+                {
+                    for (int x = 0; x < Model.Columns; x++)
+                    {
+                        string cellClass = Model.RemovedCells != null && Model.RemovedCells.Exists(c => c.X == x && c.Y == y) ? "hidden" : "cell";
+                        <div class="@cellClass" data-x="@x" data-y="@y"
+                             style="width: @(100 / Model.Columns)%; height: @(100 / Model.Rows)%;"
+                             onclick="removeCell(this, @x, @y)"
+                             onmouseover="handleCellHover(this, @x, @y)">
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <h3 style="text-align: center;">Кількість частин: <b id="count"></b> </h3>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+
